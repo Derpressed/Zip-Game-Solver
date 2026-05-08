@@ -1,8 +1,7 @@
 class Algorithm {
 
     // check if the next coordinate has a number that isn't what we want
-    static checkNum(grid, box, num, nextPosX, nextPosY) {
-        const currNum = parseInt(box.number);
+    static checkNum(grid, num, nextPosX, nextPosY) {
         const nextBox = grid.getBox(nextPosX, nextPosY);
         const valid = true;
         // if the num == 0 (path) then replace with our current number and return true
@@ -37,37 +36,85 @@ class Algorithm {
 
         const boxPosX = box.positionX;
         const boxPosY = box.positionY;
+        const boxNum = parseInt(box.number);
+
 
         const key = `${boxPosX},${boxPosY}`;
         set.add(key);
         
         // check if our current Box has the same number as our 'num'
         console.log(key);
-        if (box.number != 0 && num + 1 == box.number) {
-            console.log("found next num");
+        if (boxNum != 0 && num + 1 == boxNum) {
+            num++;
+            if (parseInt(grid.highestNum) == num && set.size === grid.rows * grid.columns) {
+                return set;
+            }
+            
         }
 
 
         // lets try to go up first (y - 1); type = "top"
         if (this.checkValidPos(gridHeight, boxPosY - 1)) {
-            if (this.checkWall(box, "top")) {
-                if (this.checkNum(grid, box, num, boxPosX, boxPosY - 1)) { // this function handles the num changing
-                    const theNextBox = grid.getBox(boxPosX, boxPosY - 1);
-                    this.boxEval(grid, theNextBox, solved, num, set);
+            if (!set.has(`${boxPosX},${boxPosY - 1}`)) {
+                if (this.checkWall(box, "top")) {
+                    if (this.checkNum(grid, num, boxPosX, boxPosY - 1)) { // this function handles the num changing
+                        const theNextBox = grid.getBox(boxPosX, boxPosY - 1);
+                        const result = this.boxEval(grid, theNextBox, solved, num, set);
+                        if (result) {
+                            return result;
+                        }
+                    }
                 }
             }
         }
 
         // lets try going right next (x + 1); type = "right"
         if (this.checkValidPos(gridWidth, boxPosX + 1)) {
-            if (this.checkWall(box, "right")) {
-                if (this.checkNum(grid, box, num, boxPosX + 1, boxPosY)) {
-                    const theNextBox = grid.getBox(boxPosX + 1, boxPosY);
-                    this.boxEval(grid, theNextBox, solved, num, set);
+            if (!set.has(`${boxPosX + 1},${boxPosY}`)) {
+                if (this.checkWall(box, "right")) {
+                    if (this.checkNum(grid, num, boxPosX + 1, boxPosY)) {
+                        const theNextBox = grid.getBox(boxPosX + 1, boxPosY);
+                        const result = this.boxEval(grid, theNextBox, solved, num, set);
+                        if (result) {
+                            return result;
+                        }
+                    }
                 }
             }
         }
 
+        // lets try going down next (y + 1); type = "bottom"
+        if (this.checkValidPos(gridHeight, boxPosY + 1)) {
+            if (!set.has(`${boxPosX},${boxPosY + 1}`)) {
+                if (this.checkWall(box, "bottom")) {
+                    if (this.checkNum(grid, num, boxPosX, boxPosY + 1)) {
+                        const theNextBox = grid.getBox(boxPosX, boxPosY + 1);
+                        const result = this.boxEval(grid, theNextBox, solved, num, set)
+                        if (result) {
+                            return result;
+                        }
+                    }
+                }
+            }
+        }
+
+        // lets try going left next (x - 1); type = "left"
+        if (this.checkValidPos(gridWidth, boxPosX - 1)) {
+            if (!set.has(`${boxPosX - 1},${boxPosY}`)) {
+                if (this.checkWall(box, "left")) {
+                    if (this.checkNum(grid, num, boxPosX - 1, boxPosY)) {
+                        const theNextBox = grid.getBox(boxPosX - 1, boxPosY);
+                        const result = this.boxEval(grid, theNextBox, solved, num, set);
+                        if (result) {
+                            return result;
+                        }
+                    }
+                }
+            }
+        }
+
+        set.delete(key);
+        return null;
     }
 
     static hunt(grid) {
@@ -78,8 +125,8 @@ class Algorithm {
         
         // this.nextBox(grid, grid.firstBox, visitedSet, startNum, solved);
         
-        this.boxEval(grid, grid.firstBox, solved, startNum, visitedSet);
-    
+        const pathSet = this.boxEval(grid, grid.firstBox, solved, startNum, visitedSet)
+        return pathSet;
     }
 }
 

@@ -147,7 +147,7 @@ class Grid {
 
                 // console.log(newChildBox.toString());
                 gridArr[i][j] = newChildBox;
-                if (newChildBox.number > highestNum) {
+                if (parseInt(newChildBox.number) > highestNum) {
                     highestNum = newChildBox.number;
                 }
             }

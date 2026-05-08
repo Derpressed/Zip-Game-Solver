@@ -7,7 +7,7 @@ async function runBot() {
     
     const browser = await chromium.launch( {channel: "msedge", headless: false} );
     const page = await browser.newPage();
-    await page.goto("https://www.zipgameunlimited.com/unlimited");
+    await page.goto("https://www.zipgameunlimited.com/");
     console.log("Website opened");  
 
     const gridClass = await ClassHelper.Grid.getGridClass(page);
@@ -15,7 +15,17 @@ async function runBot() {
         throw new Error("Could not read a square grid from the page");
     }
 
-    Algorithm.hunt(gridClass);
+    const pathSet = Algorithm.hunt(gridClass);
+    if (pathSet) {
+        for (const key of pathSet) {
+            const [x, y] = key.split(",").map(Number);
+            const box = gridClass.getBox(x, y);
+
+            await box.clickBox();
+        }
+    } else {
+        throw new Error("Could not find path");
+    }
 
 }
 
