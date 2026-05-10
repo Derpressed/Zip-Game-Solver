@@ -35,6 +35,14 @@
     (4) run 'node bot.js'
  
   </p>
+  <h2>
+    Requirements
+  </h2>
+  <p>
+
+    (1) Most recent version of MSEDGE
+    
+  </p>
 
   <p>
     How it works is that it utilizes Playwright's functionality to webscrape HTML and find attributes within the webpage. 
