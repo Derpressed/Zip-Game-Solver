@@ -1,7 +1,7 @@
 
 <div>
   <h1>
-    Zip Game Puzzle Hack
+    Zip Game Puzzle Solver
   </h1>
   <p>
     Works for any puzzle on the website of https://www.zipgameunlimited.com/
